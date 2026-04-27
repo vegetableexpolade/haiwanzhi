@@ -1,0 +1,26 @@
+<view class="container">
+  <view class="card">
+    <view class="title">现场踏勘</view>
+    <view class="btn-row">
+      <button class="btn-primary" bindtap="createNew">新建</button>
+      <button class="btn-default" bindtap="submitData">提交</button>
+      <button class="btn-default" bindtap="openLogs">日志</button>
+    </view>
+  </view>
+  <view class="card" wx:if="{{segments.length}}">
+    <view class="section-title">尚未提交的工作记录</view>
+    <view class="list-item" wx:for="{{segments}}" wx:key="_id">
+      <view class="checkbox-row" bindtap="openSegment" data-id="{{item._id}}">
+        <view class="checkbox-circle {{item.checked ? 'active' : ''}}" catchtap="toggleChecked" data-id="{{item._id}}"></view>
+        <view>
+          <view>{{item.segmentNo}}</view>
+          <view class="muted">{{item.createdAtText}} · {{item.progressText}}</view>
+        </view>
+      </view>
+      <view class="link-text" bindtap="openSegment" data-id="{{item._id}}">进入</view>
+    </view>
+  </view>
+  <view class="card" wx:else>
+    <view class="muted">暂无未提交的现场踏勘记录。</view>
+  </view>
+</view>

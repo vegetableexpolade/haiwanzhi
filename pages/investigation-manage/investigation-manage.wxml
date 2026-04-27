@@ -1,0 +1,12 @@
+<view class="container">
+  <view class="card">
+    <view class="title">现场调查管理</view>
+    <view class="list-item" wx:for="{{stations}}" wx:key="_id">
+      <view>
+        <view>{{item.stationNo}}</view>
+        <view class="muted">{{item.description}}</view>
+      </view>
+      <button class="btn-danger" size="mini" data-id="{{item._id}}" bindtap="remove">删除</button>
+    </view>
+  </view>
+</view>

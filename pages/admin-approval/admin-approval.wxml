@@ -1,0 +1,39 @@
+<view class="container">
+  <view class="card">
+    <view class="title">注册审批</view>
+    <view class="subtitle">管理员可在此审批注册申请，并设置是否授予管理员权限。</view>
+    <view class="tabs">
+      <view class="tab {{tab==='pending' ? 'active' : ''}}" data-tab="pending" bindtap="changeTab">待审批</view>
+      <view class="tab {{tab==='all' ? 'active' : ''}}" data-tab="all" bindtap="changeTab">全部用户</view>
+    </view>
+    <view class="hint-box">首次注册用户建议先通过验证码登录，再在小程序内修改密码。审批通过后即可登录。</view>
+  </view>
+
+  <view class="card" wx:for="{{users}}" wx:key="_id">
+    <view class="section-title">{{item.name}} <text class="muted">{{item.mobile}}</text></view>
+    <view class="muted">工作单位：{{item.company || '未填写'}}</view>
+    <view class="muted">申请时间：{{item.createdAtText || '-'}}</view>
+    <view class="muted">审批状态：{{item.approved ? '已通过' : '未通过/待审批'}}</view>
+    <view class="muted" wx:if="{{item.approvedAtText}}">审批时间：{{item.approvedAtText}}</view>
+    <view class="muted" wx:if="{{item.rejectReason}}">驳回原因：{{item.rejectReason}}</view>
+
+    <view class="form-item">
+      <view class="label">驳回原因（驳回时可填写）</view>
+      <textarea class="textarea" maxlength="120" placeholder="例如：信息与预置登记表不一致" data-id="{{item._id}}" bindinput="onReasonInput">{{item.tempReason || ''}}</textarea>
+    </view>
+
+    <view class="form-item">
+      <view class="label">管理员权限</view>
+      <switch checked="{{item.isAdmin}}" data-id="{{item._id}}" bindchange="onAdminSwitch" />
+    </view>
+
+    <view class="btn-row">
+      <button class="btn-primary" data-id="{{item._id}}" bindtap="approveUser">审批通过</button>
+      <button class="btn-danger" data-id="{{item._id}}" bindtap="rejectUser">驳回/禁用</button>
+    </view>
+  </view>
+
+  <view class="card" wx:if="{{!users.length}}">
+    <view class="subtitle">当前没有符合条件的用户记录。</view>
+  </view>
+</view>

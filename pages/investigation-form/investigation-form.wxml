@@ -1,0 +1,43 @@
+<view class="container">
+  <view class="card">
+    <view class="title">现场调查</view>
+    <view class="form-item">
+      <text class="label">站位编号</text>
+      <input class="input" value="{{form.stationNo}}" placeholder="请输入站位编号" bindinput="onInput" data-key="stationNo" />
+    </view>
+    <view class="form-item">
+      <text class="label">测站内容描述</text>
+      <textarea class="textarea" value="{{form.description}}" placeholder="请输入现场信息" bindinput="onInput" data-key="description" />
+    </view>
+    <view class="form-item">
+      <text class="label">拍照（最多5张）</text>
+      <view class="btn-row"><button class="btn-default" bindtap="choosePhoto">+ 拍照</button></view>
+      <view class="photo-grid">
+        <view class="photo-item" wx:for="{{photos}}" wx:key="index">
+          <image src="{{item.path || item.tempFileURL || item.fileID}}" mode="aspectFill"></image>
+          <view class="photo-del" data-index="{{index}}" bindtap="deletePhoto">×</view>
+        </view>
+      </view>
+    </view>
+    <view class="form-item">
+      <text class="label">位置</text>
+      <view class="btn-row">
+        <button class="btn-default" bindtap="getLocation">获取位置</button>
+        <button class="btn-default" bindtap="openMap">地图查看</button>
+      </view>
+      <view class="input">经度：{{form.longitude || '未获取'}}；纬度：{{form.latitude || '未获取'}}</view>
+      <view class="muted">经纬度可自动获取，也可直接手工编辑。</view>
+      <input class="input" placeholder="手工修改经度" value="{{form.longitude}}" bindinput="onInput" data-key="longitude" />
+      <input class="input" placeholder="手工修改纬度" value="{{form.latitude}}" bindinput="onInput" data-key="latitude" />
+    </view>
+    <view class="form-item">
+      <text class="label">备注</text>
+      <textarea class="textarea" value="{{form.remark}}" placeholder="请输入备注" bindinput="onInput" data-key="remark" />
+    </view>
+    <view class="btn-row">
+      <button class="btn-primary" bindtap="saveStation">保存</button>
+      <button class="btn-default" bindtap="goBack">返回</button>
+      <button class="btn-default" bindtap="nextStation">下一测站</button>
+    </view>
+  </view>
+</view>

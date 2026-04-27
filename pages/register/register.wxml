@@ -1,0 +1,16 @@
+<view class="container">
+  <view class="card">
+    <view class="title">注册申请</view>
+    <view class="subtitle">仅当管理者预置登记表中不存在该用户时，才需要在这里提交注册申请。审批通过后，可使用手机验证码登录并首次设置密码。</view>
+    <block wx:for="{{fields}}" wx:key="key">
+      <view class="form-item">
+        <text class="label">{{item.label}}</text>
+        <input class="input" data-key="{{item.key}}" type="{{item.type || 'text'}}" maxlength="{{item.maxlength || 50}}" placeholder="{{item.placeholder}}" value="{{form[item.key]}}" bindinput="onInput" />
+      </view>
+    </block>
+    <view class="btn-row">
+      <button class="btn-primary" bindtap="submitRegister">提交注册</button>
+      <button class="btn-default" bindtap="goBack">返回</button>
+    </view>
+  </view>
+</view>

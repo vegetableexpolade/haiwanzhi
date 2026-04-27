@@ -1,0 +1,17 @@
+<view class="container">
+  <view class="card">
+    <view class="title">现场踏勘和现场调查</view>
+    <view class="subtitle">请选择一种工作模式</view>
+    <view class="btn-row">
+      <button class="btn-primary" bindtap="goScout">现场踏勘</button>
+      <button class="btn-default" bindtap="goInvestigation">现场调查</button>
+    </view>
+    <view class="btn-row" wx:if="{{isAdmin}}">
+      <button class="btn-default" bindtap="goAdminApproval">注册审批</button>
+      <button class="btn-default" bindtap="goAdminExport">管理员导出</button>
+    </view>
+    <view class="btn-row">
+      <button class="btn-default" bindtap="backTitle">返回题名填写</button>
+    </view>
+  </view>
+</view>

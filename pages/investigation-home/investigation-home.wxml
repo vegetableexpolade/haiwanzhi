@@ -1,0 +1,26 @@
+<view class="container">
+  <view class="card">
+    <view class="title">现场调查</view>
+    <view class="btn-row">
+      <button class="btn-primary" bindtap="newStation">新建</button>
+      <button class="btn-default" bindtap="manageStations">管理</button>
+      <button class="btn-default" bindtap="submitStations">提交</button>
+    </view>
+  </view>
+  <view class="card" wx:if="{{stations.length}}">
+    <view class="section-title">已保存测站</view>
+    <view class="list-item" wx:for="{{stations}}" wx:key="_id">
+      <view class="checkbox-row" bindtap="openStation" data-id="{{item._id}}">
+        <view class="checkbox-circle {{item.checked ? 'active' : ''}}" catchtap="toggleChecked" data-id="{{item._id}}"></view>
+        <view>
+          <view>{{item.stationNo}}</view>
+          <view class="muted">{{item.createdAtText}} · {{item.submitted ? '已提交' : '未提交'}} · {{item.photoCountText}}</view>
+        </view>
+      </view>
+      <view class="link-text" bindtap="openStation" data-id="{{item._id}}">编辑</view>
+    </view>
+  </view>
+  <view class="card" wx:else>
+    <view class="muted">暂无现场调查记录。</view>
+  </view>
+</view>

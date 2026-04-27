@@ -1,0 +1,21 @@
+<view class="container">
+  <view class="card">
+    <view class="title">题名填写</view>
+    <view class="form-item">
+      <text class="label">海湾名称</text>
+      <input class="input" value="{{bayName}}" placeholder="请输入海湾名称" bindinput="onBayInput" />
+    </view>
+    <view class="form-item">
+      <text class="label">时间</text>
+      <view class="input">{{currentTime}}</view>
+    </view>
+    <view class="form-item">
+      <text class="label">填表人</text>
+      <input class="input" value="{{recorder}}" placeholder="请输入填表人" bindinput="onRecorderInput" />
+    </view>
+    <view class="btn-row">
+      <button class="btn-primary" bindtap="saveAndNext">下一步</button>
+      <button class="btn-default" bindtap="logout">退出登录</button>
+    </view>
+  </view>
+</view>

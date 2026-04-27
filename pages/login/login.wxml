@@ -1,0 +1,44 @@
+<view class="container">
+  <view class="card">
+    <view class="title">志书编写海湾现场踏勘表</view>
+    <view class="subtitle">支持“姓名+密码”或“手机号+验证码”登录。开发测试保留隐藏测试账号 test / test1233。</view>
+
+    <view class="tabs">
+      <view class="tab {{mode==='password' ? 'active' : ''}}" bindtap="setMode" data-mode="password">姓名密码登录</view>
+      <view class="tab {{mode==='mobile' ? 'active' : ''}}" bindtap="setMode" data-mode="mobile">手机验证码登录</view>
+    </view>
+
+    <block wx:if="{{mode==='password'}}">
+      <view class="form-item">
+        <text class="label">姓名</text>
+        <input class="input" placeholder="请输入姓名" value="{{name}}" bindinput="onInput" data-key="name" />
+      </view>
+      <view class="form-item">
+        <text class="label">密码</text>
+        <input class="input" password placeholder="请输入密码" value="{{password}}" bindinput="onInput" data-key="password" />
+      </view>
+    </block>
+
+    <block wx:if="{{mode==='mobile'}}">
+      <view class="form-item">
+        <text class="label">手机号码</text>
+        <input class="input" type="number" maxlength="11" placeholder="请输入手机号码" value="{{mobile}}" bindinput="onInput" data-key="mobile" />
+      </view>
+      <view class="form-item">
+        <text class="label">验证码</text>
+        <view class="inline-row">
+          <input class="input" type="number" maxlength="6" placeholder="请输入验证码" value="{{code}}" bindinput="onInput" data-key="code" />
+          <button class="small-btn" bindtap="sendCode" disabled="{{countdown>0}}">{{countdown>0 ? countdown + 's' : '获取验证码'}}</button>
+        </view>
+      </view>
+    </block>
+
+    <view class="btn-row">
+      <button class="btn-primary" bindtap="onLogin">登录</button>
+      <button class="btn-default" bindtap="goRegister">注册</button>
+    </view>
+    <view class="hint-box">
+      首次登录后若系统提示修改密码，请先完成修改再进入填报页面。
+    </view>
+  </view>
+</view>

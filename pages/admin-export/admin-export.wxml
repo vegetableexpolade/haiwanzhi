@@ -1,0 +1,36 @@
+<view class="container">
+  <view class="card">
+    <view class="title">管理员导出</view>
+    <view class="subtitle">仅管理员可查看和下载已提交数据</view>
+
+    <view class="form-item">
+      <text class="label">导出类型</text>
+      <picker mode="selector" range="{{kindOptions}}" range-key="label" bindchange="onKindChange">
+        <view class="picker">{{kindOptions[kindIndex].label}}</view>
+      </picker>
+    </view>
+
+    <view class="form-item">
+      <text class="label">开始日期</text>
+      <picker mode="date" value="{{startDate}}" bindchange="onStartDateChange">
+        <view class="picker">{{startDate || '请选择开始日期（可选）'}}</view>
+      </picker>
+    </view>
+
+    <view class="form-item">
+      <text class="label">结束日期</text>
+      <picker mode="date" value="{{endDate}}" bindchange="onEndDateChange">
+        <view class="picker">{{endDate || '请选择结束日期（可选）'}}</view>
+      </picker>
+    </view>
+
+    <view class="btn-row">
+      <button class="btn-primary" bindtap="onExport">生成并下载 Excel</button>
+      <button class="btn-default" bindtap="copyLink" disabled="{{!downloadURL}}">复制下载链接</button>
+    </view>
+
+    <view wx:if="{{lastFileID}}" class="hint-box">
+      最近导出文件：{{lastFileID}}
+    </view>
+  </view>
+</view>

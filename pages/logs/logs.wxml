@@ -1,0 +1,19 @@
+<view class="container">
+  <view class="card">
+    <view class="title">操作日志</view>
+    <picker mode="selector" range="{{days}}" value="{{dayIndex}}" bindchange="onDayChange">
+      <view class="picker">{{currentDay || '请选择日期'}}</view>
+    </picker>
+  </view>
+  <view class="card" wx:if="{{logs.length}}">
+    <view class="list-item" wx:for="{{logs}}" wx:key="index">
+      <view>
+        <view>{{item.action}}</view>
+        <view class="muted">{{item.time}} · {{item.detail}}</view>
+      </view>
+    </view>
+  </view>
+  <view class="card" wx:else>
+    <view class="muted">当前日期暂无操作日志。</view>
+  </view>
+</view>

@@ -1,0 +1,16 @@
+<view class="container">
+  <view class="card">
+    <view class="title">踏勘内容选择</view>
+    <view class="subtitle">岸段序号：{{segment.segmentNo}}</view>
+    <view class="list-item" wx:for="{{typeCards}}" wx:key="key" data-key="{{item.key}}" bindtap="openType">
+      <view>
+        <view class="{{item.done ? 'status-gray' : 'status-blue'}}">{{item.label}}</view>
+        <view class="muted">{{item.done ? '已填写，可修改' : '未填写'}}</view>
+      </view>
+      <view class="{{item.done ? 'status-gray' : 'status-blue'}}">{{item.done ? '已完成' : '待填写'}}</view>
+    </view>
+    <view class="btn-row">
+      <button class="btn-default" bindtap="goBack">返回</button>
+    </view>
+  </view>
+</view>
