@@ -1,0 +1,41 @@
+{
+  "pages": [
+    "pages/login/login",
+    "pages/register/register",
+    "pages/change-password/change-password",
+    "pages/title/title",
+    "pages/mode-select/mode-select",
+    "pages/scout-home/scout-home",
+    "pages/scout-entry-type/scout-entry-type",
+    "pages/scout-form/scout-form",
+    "pages/logs/logs",
+    "pages/investigation-home/investigation-home",
+    "pages/investigation-form/investigation-form",
+    "pages/investigation-manage/investigation-manage",
+    "pages/admin-approval/admin-approval",
+    "pages/admin-export/admin-export"
+  ],
+  "window": {
+    "navigationBarTitleText": "志书编写海湾现场踏勘表",
+    "navigationBarBackgroundColor": "#1677ff",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#f5f7fa",
+    "backgroundTextStyle": "light"
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json",
+  "permission": {
+    "scope.userLocation": {
+      "desc": "用于现场定位和记录拍照经纬度"
+    },
+    "scope.writePhotosAlbum": {
+      "desc": "用于保存和管理现场照片"
+    },
+    "scope.camera": {
+      "desc": "用于现场拍照"
+    }
+  },
+  "requiredPrivateInfos": [
+    "getLocation"
+  ]
+}
