@@ -1,5 +1,6 @@
 const { cloud, db, _ } = require('./common')
-const MOBILE_PATTERN = /^1\d{10}$/
+const MOBILE_BODY_LENGTH = 10
+const MOBILE_PATTERN = new RegExp(`^1\\d{${MOBILE_BODY_LENGTH}}$`)
 exports.main = async (event) => {
   const mobile = String(event.mobile || '').trim()
   const company = String(event.company || '').trim()

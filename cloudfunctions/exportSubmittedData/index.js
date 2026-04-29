@@ -59,6 +59,12 @@ function getSubmitStatus(item = {}) {
 }
 
 function normalizeEntries(entries = {}) {
+  if (entries[LEGACY_COASTLINE_KEY] && entries.shoreline) {
+    return {
+      ...entries,
+      shoreline: { ...entries[LEGACY_COASTLINE_KEY], ...entries.shoreline }
+    }
+  }
   if (entries[LEGACY_COASTLINE_KEY] && !entries.shoreline) {
     return { ...entries, shoreline: entries[LEGACY_COASTLINE_KEY] }
   }
@@ -190,7 +196,7 @@ function buildFilter({ includeDraft, startDate, endDate }) {
   ])
 }
 
-async function listAll(collectionName, filter, orderField = 'submittedAt') {
+async function listAll(collectionName, filter, orderField = 'createdAt') {
   let all = []
   let page = 0
   const pageSize = 100
