@@ -1,4 +1,4 @@
-const { db, ensureCollection } = require('./common')
+const { db, withCollection } = require('./common')
 
 async function sendWithTencentSms({ mobile, code }) {
   if (process.env.SMS_ENABLED !== 'true') {
@@ -42,14 +42,12 @@ async function sendWithTencentSms({ mobile, code }) {
 
 exports.main = async (event) => {
   const { mobile } = event
-  await ensureCollection('users')
-  await ensureCollection('loginCodes')
-  const userRes = await db.collection('users').where({ mobile }).limit(1).get()
+  const userRes = await withCollection('users', () => db.collection('users').where({ mobile }).limit(1).get())
   const user = userRes.data[0]
   if (!user) return { success: false, message: '手机号未登记，请先注册' }
   if (!user.approved) return { success: false, message: '该用户尚未审批通过' }
 
-  const latestRes = await db.collection('loginCodes').where({ mobile }).orderBy('createdAt', 'desc').limit(1).get()
+  const latestRes = await withCollection('loginCodes', () => db.collection('loginCodes').where({ mobile }).orderBy('createdAt', 'desc').limit(1).get())
   const latest = latestRes.data[0]
   if (latest && (Date.now() - new Date(latest.createdAt).getTime()) < 60 * 1000) {
     return { success: false, message: '发送过于频繁，请稍后再试' }

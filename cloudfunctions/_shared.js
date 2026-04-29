@@ -25,6 +25,16 @@ async function ensureCollection(name) {
     throw error
   }
 }
+
+async function withCollection(name, action) {
+  try {
+    return await action()
+  } catch (error) {
+    if (!isCollectionMissingError(error)) throw error
+    await ensureCollection(name)
+    return await action()
+  }
+}
 function formatDate(date) {
   const d = new Date(date)
   const pad = (n) => String(n).padStart(2, '0')
@@ -56,4 +66,4 @@ async function requireAdmin() {
   if (!user.isAdmin) throw new Error('仅管理员可执行此操作')
   return user
 }
-module.exports = { cloud, db, _, formatDate, pad, dateStr, getCurrentUser, requireAdmin, ensureCollection, isCollectionMissingError }
+module.exports = { cloud, db, _, formatDate, pad, dateStr, getCurrentUser, requireAdmin, ensureCollection, isCollectionMissingError, withCollection }

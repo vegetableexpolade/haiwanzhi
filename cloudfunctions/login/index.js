@@ -1,13 +1,12 @@
-const { cloud, db, ensureCollection } = require('./common')
+const { cloud, db, withCollection } = require('./common')
 exports.main = async (event) => {
-  await ensureCollection('users')
   const { mode } = event
   if (mode === 'password') {
     const { name, password } = event
     if (name === 'test' && password === 'test1233') {
       return { success: true, user: { username: 'test', name: '测试用户', company: '测试单位', approved: true, testUser: true, forceChangePassword: false, isAdmin: false } }
     }
-    const res = await db.collection('users').where({ name }).limit(1).get()
+    const res = await withCollection('users', () => db.collection('users').where({ name }).limit(1).get())
     const user = res.data[0]
     if (!user) return { success: false, message: '用户不存在，请先注册' }
     if (!user.approved) return { success: false, message: '用户尚未审批通过' }
@@ -20,13 +19,12 @@ exports.main = async (event) => {
   }
 
   if (mode === 'mobile') {
-    await ensureCollection('loginCodes')
     const { mobile, code } = event
-    const userRes = await db.collection('users').where({ mobile }).limit(1).get()
+    const userRes = await withCollection('users', () => db.collection('users').where({ mobile }).limit(1).get())
     const user = userRes.data[0]
     if (!user) return { success: false, message: '手机号未登记，请先注册' }
     if (!user.approved) return { success: false, message: '用户尚未审批通过' }
-    const codeRes = await db.collection('loginCodes').where({ mobile, code, used: false }).orderBy('createdAt', 'desc').limit(1).get()
+    const codeRes = await withCollection('loginCodes', () => db.collection('loginCodes').where({ mobile, code, used: false }).orderBy('createdAt', 'desc').limit(1).get())
     const row = codeRes.data[0]
     if (!row) return { success: false, message: '验证码错误或已失效' }
     if ((Date.now() - new Date(row.createdAt).getTime()) > 5 * 60 * 1000) return { success: false, message: '验证码已过期' }

@@ -1,16 +1,10 @@
-const { cloud, db, _ } = require('./common')
+const { cloud, db, _, withCollection } = require('./common')
 const MOBILE_PREFIX = '1'
 const MOBILE_LENGTH = 11
 const DIGIT_PATTERN = /^\d+$/
 
 function isValidMobile(value = '') {
   return value.length === MOBILE_LENGTH && value.startsWith(MOBILE_PREFIX) && DIGIT_PATTERN.test(value)
-}
-
-async function ensureUsersCollection() {
-  try {
-    await db.createCollection('users')
-  } catch (e) {}
 }
 
 exports.main = async (event) => {
@@ -20,12 +14,11 @@ exports.main = async (event) => {
   if (!isValidMobile(mobile) || !company || !name) {
     return { success: false, message: '请完整填写注册信息' }
   }
-  await ensureUsersCollection()
   const wxContext = cloud.getWXContext()
   const openid = wxContext.OPENID || ''
   const conditions = [{ mobile }, { name, company }]
   if (openid) conditions.push({ _openid: openid })
-  const existed = await db.collection('users').where(_.or(conditions)).limit(1).get()
+  const existed = await withCollection('users', () => db.collection('users').where(_.or(conditions)).limit(1).get())
   const user = existed.data[0]
   if (user) {
     if (user.approved) return { success: false, message: '该用户已通过审批，请直接登录' }
