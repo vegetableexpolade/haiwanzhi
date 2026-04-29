@@ -16,7 +16,6 @@ function typeLabel(typeKey) {
   return {
     geomorphology: '海岸地貌类型',
     shoreline: '海岸线类型',
-    coastline: '海岸线类型',
     seaUse: '海域使用现状',
     tidal: '潮间带类型',
     landUse: '土地利用现状'
@@ -58,8 +57,15 @@ function getSubmitStatus(item = {}) {
   return item.submitted ? '已提交' : '草稿'
 }
 
+function normalizeEntries(entries = {}) {
+  if (entries.coastline && !entries.shoreline) {
+    return { ...entries, shoreline: entries.coastline }
+  }
+  return entries
+}
+
 function createScountSummaryRow(item) {
-  const entries = item.entries || {}
+  const entries = normalizeEntries(item.entries || {})
   const titleInfo = getTitleInfo(item)
   const completed = Object.keys(entries).map((key) => typeLabel(key)).join('、')
   return {
@@ -216,11 +222,26 @@ exports.main = async (event) => {
     const scoutItems = await listAll('scoutSegments', filter, orderField)
     totalRows += scoutItems.length
     appendSheet(workbook, scoutItems.map(createScountSummaryRow), '踏勘总表')
-    appendSheet(workbook, scoutItems.map((item) => createGeomorphologyRow(item, ((item.entries || {}).geomorphology) || {})), '海岸地貌类型')
-    appendSheet(workbook, scoutItems.map((item) => createCoastlineRow(item, ((item.entries || {}).shoreline) || {})), '海岸线类型')
-    appendSheet(workbook, scoutItems.map((item) => createSeaUseRow(item, ((item.entries || {}).seaUse) || {})), '海域使用现状')
-    appendSheet(workbook, scoutItems.map((item) => createLandUseRow(item, ((item.entries || {}).landUse) || {})), '土地利用现状')
-    appendSheet(workbook, scoutItems.map((item) => createTidalRow(item, ((item.entries || {}).tidal) || {})), '潮间带类型')
+    appendSheet(workbook, scoutItems.map((item) => {
+      const entries = normalizeEntries(item.entries || {})
+      return createGeomorphologyRow(item, entries.geomorphology || {})
+    }), '海岸地貌类型')
+    appendSheet(workbook, scoutItems.map((item) => {
+      const entries = normalizeEntries(item.entries || {})
+      return createCoastlineRow(item, entries.shoreline || {})
+    }), '海岸线类型')
+    appendSheet(workbook, scoutItems.map((item) => {
+      const entries = normalizeEntries(item.entries || {})
+      return createSeaUseRow(item, entries.seaUse || {})
+    }), '海域使用现状')
+    appendSheet(workbook, scoutItems.map((item) => {
+      const entries = normalizeEntries(item.entries || {})
+      return createLandUseRow(item, entries.landUse || {})
+    }), '土地利用现状')
+    appendSheet(workbook, scoutItems.map((item) => {
+      const entries = normalizeEntries(item.entries || {})
+      return createTidalRow(item, entries.tidal || {})
+    }), '潮间带类型')
     exportedSheets += 6
   }
 
