@@ -59,14 +59,18 @@ function getSubmitStatus(item = {}) {
 }
 
 function normalizeEntries(entries = {}) {
-  if (entries[LEGACY_COASTLINE_KEY] && entries.shoreline) {
-    return {
-      ...entries,
-      shoreline: { ...entries[LEGACY_COASTLINE_KEY], ...entries.shoreline }
-    }
+  const legacy = entries[LEGACY_COASTLINE_KEY]
+  if (legacy && entries.shoreline) {
+    const merged = { ...entries.shoreline }
+    Object.keys(legacy).forEach((key) => {
+      if (merged[key] === undefined || merged[key] === '') {
+        merged[key] = legacy[key]
+      }
+    })
+    return { ...entries, shoreline: merged }
   }
-  if (entries[LEGACY_COASTLINE_KEY] && !entries.shoreline) {
-    return { ...entries, shoreline: entries[LEGACY_COASTLINE_KEY] }
+  if (legacy && !entries.shoreline) {
+    return { ...entries, shoreline: legacy }
   }
   return entries
 }
@@ -249,7 +253,7 @@ exports.main = async (event) => {
   }
 
   if (!exportedSheets) return { success: false, message: '未选择导出类型' }
-  if (!totalRows) return { success: false, message: '没有可导出的数据，请先提交或勾选包含草稿' }
+  if (!totalRows) return { success: false, message: '没有可导出的数据，请确认筛选条件或先提交/包含草稿后再导出' }
 
   const fileBuffer = XLSX.write(workbook, { type: 'buffer', bookType: 'xlsx' })
   const stamp = new Date().toISOString().replace(/[-:TZ.]/g, '').slice(0, 14)

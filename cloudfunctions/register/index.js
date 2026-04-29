@@ -1,11 +1,16 @@
 const { cloud, db, _ } = require('./common')
-const MOBILE_BODY_LENGTH = 10
-const MOBILE_PATTERN = new RegExp(`^1\\d{${MOBILE_BODY_LENGTH}}$`)
+const MOBILE_PREFIX = '1'
+const MOBILE_LENGTH = 11
+const DIGIT_PATTERN = /^\d+$/
+
+function isValidMobile(value = '') {
+  return value.length === MOBILE_LENGTH && value.startsWith(MOBILE_PREFIX) && DIGIT_PATTERN.test(value)
+}
 exports.main = async (event) => {
   const mobile = String(event.mobile || '').trim()
   const company = String(event.company || '').trim()
   const name = String(event.name || '').trim()
-  if (!MOBILE_PATTERN.test(mobile) || !company || !name) {
+  if (!isValidMobile(mobile) || !company || !name) {
     return { success: false, message: '请完整填写注册信息' }
   }
   const wxContext = cloud.getWXContext()
