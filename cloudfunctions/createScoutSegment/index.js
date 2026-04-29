@@ -1,16 +1,4 @@
-const { cloud, db, pad, dateStr } = require('./common')
-
-const COLLECTION_NOT_EXIST_CODE = -502006
-
-async function ensureCollection(name) {
-  try {
-    await db.createCollection(name)
-  } catch (e) {
-    if (e.errCode === COLLECTION_NOT_EXIST_CODE || (e.message && (e.message.includes('ALREADY_EXISTS') || e.message.includes('COLLECTION_EXIST')))) {
-      return
-    }
-  }
-}
+const { cloud, db, pad, dateStr, ensureCollection } = require('./common')
 
 exports.main = async (event) => {
   const { titleInfo } = event
