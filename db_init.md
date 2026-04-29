@@ -1,5 +1,47 @@
 # 数据库集合建议结构
 
+## ⚠️ 首次部署：必须先初始化数据库
+
+> 若跳过此步骤，所有云函数将返回 `DATABASE_COLLECTION_NOT_EXIST` 错误。
+
+### 方式一：调用 `setupCollections` 云函数（推荐）
+
+1. 在微信开发者工具 → 云开发控制台 → 云函数，部署 `setupCollections`
+2. 点击"云端测试"，使用管理员账号调用，入参为空 `{}`
+3. 返回 `"success": true` 即表示所有集合就绪
+
+> 注意：调用前请确保当前小程序用户在 `users` 集合中存在且 `isAdmin: true`。如果是全新部署，可在方式二手动创建 users 集合和管理员记录后再调用。
+
+### 方式二：控制台手动创建（全新部署）
+
+在微信云开发控制台 → 数据库 页面，依次点击"+"新建以下集合：
+
+| 集合名 | 说明 |
+|--------|------|
+| `users` | 用户信息（注册、审批、登录） |
+| `loginCodes` | 手机验证码 |
+| `segmentCounters` | 踏勘岸段编号计数器 |
+| `scoutSegments` | 现场踏勘记录 |
+| `surveyStations` | 现场调查测站记录 |
+
+创建完成后，在 `users` 集合添加第一条管理员记录：
+```json
+{
+  "mobile": "13800000000",
+  "company": "管理单位",
+  "name": "管理员",
+  "password": "请修改为安全密码",
+  "approved": true,
+  "forceChangePassword": true,
+  "isAdmin": true,
+  "createdAt": "2026-01-01T00:00:00.000Z"
+}
+```
+
+---
+
+## 字段结构参考
+
 ## users
 ```json
 {

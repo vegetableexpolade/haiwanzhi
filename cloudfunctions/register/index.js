@@ -6,6 +6,13 @@ const DIGIT_PATTERN = /^\d+$/
 function isValidMobile(value = '') {
   return value.length === MOBILE_LENGTH && value.startsWith(MOBILE_PREFIX) && DIGIT_PATTERN.test(value)
 }
+
+async function ensureUsersCollection() {
+  try {
+    await db.createCollection('users')
+  } catch (e) {}
+}
+
 exports.main = async (event) => {
   const mobile = String(event.mobile || '').trim()
   const company = String(event.company || '').trim()
@@ -13,6 +20,7 @@ exports.main = async (event) => {
   if (!isValidMobile(mobile) || !company || !name) {
     return { success: false, message: '请完整填写注册信息' }
   }
+  await ensureUsersCollection()
   const wxContext = cloud.getWXContext()
   const openid = wxContext.OPENID || ''
   const conditions = [{ mobile }, { name, company }]

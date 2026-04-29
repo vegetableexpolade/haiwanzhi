@@ -205,8 +205,16 @@ async function listAll(collectionName, filter, orderField = 'createdAt') {
   let page = 0
   const pageSize = 100
   while (true) {
-    const query = db.collection(collectionName).where(filter).orderBy(orderField, 'desc').skip(page * pageSize).limit(pageSize)
-    const res = await query.get()
+    let res
+    try {
+      const query = db.collection(collectionName).where(filter).orderBy(orderField, 'desc').skip(page * pageSize).limit(pageSize)
+      res = await query.get()
+    } catch (e) {
+      if (e.errCode === -502006 || (e.message && e.message.includes('COLLECTION_NOT_EXIST'))) {
+        break
+      }
+      throw e
+    }
     const rows = res.data || []
     all = all.concat(rows)
     if (rows.length < pageSize) break
