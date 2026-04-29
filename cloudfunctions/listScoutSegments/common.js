@@ -1,1 +1,1 @@
-module.exports = require('./_shared')
+module.exports = require('./shared')
