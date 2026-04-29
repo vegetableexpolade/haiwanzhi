@@ -1,4 +1,5 @@
-const { cloud, db, pad, dateStr } = require('./common')
+const { cloud, db, pad, dateStr, ensureCollection } = require('./common')
+
 exports.main = async (event) => {
   const { titleInfo } = event
   if (!titleInfo || !titleInfo.bayName) throw new Error('题名信息缺失')
@@ -6,6 +7,10 @@ exports.main = async (event) => {
   const today = new Date()
   const ds = dateStr(today)
   const key = `${titleInfo.bayName}-${ds}`
+
+  await ensureCollection('segmentCounters')
+  await ensureCollection('scoutSegments')
+
   const counterRes = await db.collection('segmentCounters').where({ key }).limit(1).get()
   let seq = 1
   if (counterRes.data.length) {

@@ -1,7 +1,9 @@
-const { cloud, db } = require('./common')
+const { cloud, db, ensureCollection } = require('./common')
+
 exports.main = async (event) => {
   const wxContext = cloud.getWXContext()
   const { id, payload } = event
+  await ensureCollection('surveyStations')
   if (id) {
     await db.collection('surveyStations').doc(id).update({ data: { ...payload, updatedAt: new Date() } })
     return { success: true, id }

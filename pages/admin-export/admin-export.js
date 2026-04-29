@@ -30,6 +30,7 @@ Page({
     kindIndex: 0,
     startDate: '',
     endDate: '',
+    includeDraft: true,
     downloadURL: '',
     lastFileID: ''
   },
@@ -42,11 +43,20 @@ Page({
   onKindChange(e) { this.setData({ kindIndex: Number(e.detail.value) }) },
   onStartDateChange(e) { this.setData({ startDate: e.detail.value }) },
   onEndDateChange(e) { this.setData({ endDate: e.detail.value }) },
+  onDraftToggle(e) { this.setData({ includeDraft: !!e.detail.value }) },
   async onExport() {
     const kind = this.data.kindOptions[this.data.kindIndex].value
     wx.showLoading({ title: '生成中' })
     try {
-      const res = await wx.cloud.callFunction({ name: 'exportSubmittedData', data: { kind, startDate: this.data.startDate, endDate: this.data.endDate } })
+      const res = await wx.cloud.callFunction({
+        name: 'exportSubmittedData',
+        data: {
+          kind,
+          startDate: this.data.startDate,
+          endDate: this.data.endDate,
+          includeDraft: this.data.includeDraft
+        }
+      })
       const result = res.result || {}
       if (!result.success) throw new Error(result.message || '导出失败')
       this.setData({ downloadURL: result.tempFileURL, lastFileID: result.fileID })

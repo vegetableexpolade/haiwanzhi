@@ -1,8 +1,16 @@
-const { cloud, db, formatDate } = require('./common')
+const { cloud, db, formatDate, isCollectionMissingError } = require('./common')
 const TYPE_KEYS = ['geomorphology', 'shoreline', 'seaUse', 'tidal', 'landUse']
 exports.main = async () => {
   const wxContext = cloud.getWXContext()
-  const res = await db.collection('scoutSegments').where({ _openid: wxContext.OPENID, submitted: false }).orderBy('createdAt', 'desc').get()
+  let res
+  try {
+    res = await db.collection('scoutSegments').where({ _openid: wxContext.OPENID, submitted: false }).orderBy('createdAt', 'desc').get()
+  } catch (e) {
+    if (isCollectionMissingError(e)) {
+      return { data: [], error: '数据集合尚未建立，请联系管理员初始化数据库（调用 setupCollections）' }
+    }
+    throw e
+  }
   return {
     data: res.data.map(item => {
       const entries = item.entries || {}
