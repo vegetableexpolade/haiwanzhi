@@ -1,9 +1,10 @@
 const { cloud, db, _ } = require('./common')
+const MOBILE_PATTERN = /^1\d{10}$/
 exports.main = async (event) => {
   const mobile = String(event.mobile || '').trim()
   const company = String(event.company || '').trim()
   const name = String(event.name || '').trim()
-  if (!/^1\d{10}$/.test(mobile) || !company || !name) {
+  if (!MOBILE_PATTERN.test(mobile) || !company || !name) {
     return { success: false, message: '请完整填写注册信息' }
   }
   const wxContext = cloud.getWXContext()

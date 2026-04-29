@@ -1,5 +1,6 @@
 const { cloud, db, _, requireAdmin, formatDate } = require('./common')
 const XLSX = require('xlsx')
+const LEGACY_SHORELINE_KEY = 'coastline'
 
 function normalizePhotos(photos = []) {
   return (photos || []).map((p, idx) => ({
@@ -58,8 +59,8 @@ function getSubmitStatus(item = {}) {
 }
 
 function normalizeEntries(entries = {}) {
-  if (entries.coastline && !entries.shoreline) {
-    return { ...entries, shoreline: entries.coastline }
+  if (entries[LEGACY_SHORELINE_KEY] && !entries.shoreline) {
+    return { ...entries, shoreline: entries[LEGACY_SHORELINE_KEY] }
   }
   return entries
 }
