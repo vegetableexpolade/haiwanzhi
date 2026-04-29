@@ -23,6 +23,10 @@
         <view class="picker">{{endDate || '请选择结束日期（可选）'}}</view>
       </picker>
     </view>
+    <view class="form-item">
+      <text class="label">包含草稿</text>
+      <switch checked="{{includeDraft}}" bindchange="onDraftToggle" />
+    </view>
 
     <view class="btn-row">
       <button class="btn-primary" bindtap="onExport">生成并下载 Excel</button>

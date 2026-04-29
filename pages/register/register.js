@@ -19,9 +19,15 @@ Page({
     wx.showLoading({ title: '提交中' })
     try {
       const res = await wx.cloud.callFunction({ name: 'register', data: form })
+      const result = res.result || {}
       wx.hideLoading()
-      if (!res.result.success) throw new Error(res.result.message || '提交失败')
-      wx.showModal({ title: '提交成功', content: '注册申请已提交，待后台审批后可登录。', showCancel: false, success: () => wx.navigateBack() })
+      if (!result.success) throw new Error(result.message || '提交失败')
+      wx.showModal({
+        title: '提交成功',
+        content: result.message || '注册申请已提交，待后台审批后可登录。',
+        showCancel: false,
+        success: () => wx.navigateBack()
+      })
     } catch (e) {
       wx.hideLoading()
       wx.showModal({ title: '提交失败', content: e.message || '请稍后再试', showCancel: false })
