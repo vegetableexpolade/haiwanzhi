@@ -1,4 +1,4 @@
-const { db } = require('./common')
+const { db, ensureCollection } = require('./common')
 
 async function sendWithTencentSms({ mobile, code }) {
   if (process.env.SMS_ENABLED !== 'true') {
@@ -42,6 +42,8 @@ async function sendWithTencentSms({ mobile, code }) {
 
 exports.main = async (event) => {
   const { mobile } = event
+  await ensureCollection('users')
+  await ensureCollection('loginCodes')
   const userRes = await db.collection('users').where({ mobile }).limit(1).get()
   const user = userRes.data[0]
   if (!user) return { success: false, message: '手机号未登记，请先注册' }

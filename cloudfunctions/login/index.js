@@ -1,5 +1,6 @@
-const { cloud, db } = require('./common')
+const { cloud, db, ensureCollection } = require('./common')
 exports.main = async (event) => {
+  await ensureCollection('users')
   const { mode } = event
   if (mode === 'password') {
     const { name, password } = event
@@ -19,6 +20,7 @@ exports.main = async (event) => {
   }
 
   if (mode === 'mobile') {
+    await ensureCollection('loginCodes')
     const { mobile, code } = event
     const userRes = await db.collection('users').where({ mobile }).limit(1).get()
     const user = userRes.data[0]

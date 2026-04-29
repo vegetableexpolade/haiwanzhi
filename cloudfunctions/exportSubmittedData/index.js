@@ -1,4 +1,4 @@
-const { cloud, db, _, requireAdmin, formatDate } = require('./common')
+const { cloud, db, _, requireAdmin, formatDate, isCollectionMissingError } = require('./common')
 const XLSX = require('xlsx')
 const LEGACY_COASTLINE_KEY = 'coastline'
 
@@ -210,7 +210,7 @@ async function listAll(collectionName, filter, orderField = 'createdAt') {
       const query = db.collection(collectionName).where(filter).orderBy(orderField, 'desc').skip(page * pageSize).limit(pageSize)
       res = await query.get()
     } catch (e) {
-      if (e.errCode === -502006 || (e.message && e.message.includes('COLLECTION_NOT_EXIST'))) {
+      if (isCollectionMissingError(e)) {
         break
       }
       throw e
